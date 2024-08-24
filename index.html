@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>胡桃ダメージチャレンジ計算機</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+    <header>
+        <h1><span class="text">【原神】</span><span class="text">胡桃ダメージチャレンジ</span><span class="text">専用計算機</span></h1>
+    </header>
+    
+    <main id="main">
+        <div class="center">
+            <div id="damage-showcase">
+                <span id="damage" class="text">???</span>
+                <span class="text">ダメージ</span>
+            </div>
+        </div>
+
+        <div class="nav">
+            <button class="tab-button" onclick="showScreen1('settings')"><span class="text">基本</span><span class="text">設定</span></button>
+            <button class="tab-button" onclick="showScreen1('character-settings')"><span class="text">キャラ</span><span class="text">設定</span></button>
+            <button class="tab-button" onclick="showScreen1('confirming-status')"><span class="text">ステータス</span><span class="text">確認</span></button>
+            <button class="tab-button" onclick="showScreen1('references')"><span class="nowrap">その他</span></button>
+        </div>
+
+
+        <div id="content">
+            <div id="settings" class="screen1">
+                <h3>敵</h3>
+                <p>
+                    <input id="shouki_no_kami" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this), set_enemy_level()" checked>
+                    七葉寂照秘密主（元素耐性-140%）<br>
+                    <input id="abyss" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this), set_enemy_level()">
+                    深境回廊 第7層 第2間 前半（会心ダメージ+120%）<br>
+                    <input id="other_enemy" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this), set_enemy_level()">
+                    その他<br>
+                    <span id="abyss_tip">会心ダメージ以外のバフは、キャラ設定 >> カスタムバフ から入力してください。</span>
+                </p>
+                <p>
+                    <span>
+                        敵レベル&emsp;&emsp;：<span id="enemy_level" class="parameter">60</span>
+                        <input id="level_range" type="range" min="60" max="90" step="10" value="60" class="slider_input" onchange="set_parameter(this)">
+                        <input id="level_input" type="number" step="1" value="60" class="status-input no-spin" onchange="never_minus(this), set_parameter(this)"><br>
+                    </span>
+                    <span>
+                        敵の元素耐性：<span id="enemy_resistance" class="parameter">-140</span>
+                        <input id="resistance_input" type="number" step="1" value="10" class="status-input no-spin" onchange="set_parameter(this)"></input>%
+                    </span>
+                </p>
+
+                <div id="foods_select">
+                    <h3>料理・薬剤</h3>
+                    <p>
+                        ・攻撃系料理<br>
+                        <input type="checkbox" class="checkbox_input exclusive" id="adeptus's_temptation" onchange="exclusive_box(this)">攻撃力+372 (仙跳牆)<br>
+                        <input type="checkbox" class="checkbox_input exclusive" id="mondstadt" onchange="exclusive_box(this)" checked>
+                        <span class="text">会心ダメ+20% </span><span class="text">(モンドの過去など)</span>
+                    </p>
+                    <p>
+                        ・防御系料理<br>
+                        <input type="checkbox" class="checkbox_input" id="pour_la_justice" checked>
+                        <span class="text">HP+30% </span><span class="text">(プル・ラ・ジャスティスなど)</span>
+                    </p>
+                    <p>
+                        ・薬剤<br>
+                        <input type="checkbox" class="checkbox_input" id="flaming_oil" checked>
+                        <span class="text">炎元素ダメージ+25% </span><span class="text">(烈火のオイル)</span>
+                    </p>
+                </div>
+
+                <h3>元素反応</h3>
+                <p>
+                    <input id="vaporize" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this)">蒸発<br>
+                    <input id="melt" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this)" checked>溶解
+                </p>
+
+                <h3>カスタムバフ</h3>
+                <p>
+                    <span class="text">キャラクター設定などで調整できないバフがあればここで指定してください。</span>
+                    <span class="text">耐性デバフや防御デバフを設定する際は、マイナスをつけた値を入力してください。</span><br>
+                    <table id="additional_table">
+                        <tr>
+                            <td class="noborder additional_status">HP%</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_percentage_hp" type="number" step="0.1" value="0" class="status-input no-spin">%
+                                <input id="additional_percentage_hp_allmenber" type="checkbox" class="checkbox_input">チーム全員に有効
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">攻撃力%</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_percentage_attack" type="number" step="0.1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">攻撃力実数</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_flat_attack" type="number" step="0.1" value="0" class="status-input no-spin">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">元素熟知</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_em" type="number" step="1" value="0" class="status-input no-spin">
+                                &emsp;<input id="additional_em_allmenber" type="checkbox" class="checkbox_input">チーム全員に有効
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status"><span class="nowrap">元素反応の加算効果</span></td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_reaction_dmgbonus" type="number" step="1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">会心ダメージ</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_crit_damage" type="number" step="0.1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">ダメージバフ</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_damage_buff" type="number" step="0.1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">敵の防御力</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_defence" type="number" step="1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="noborder additional_status">敵の元素耐性</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_resistance" type="number" step="1" value="0" class="status-input no-spin">%
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+
+            
+            <div id="character-settings" class="screen1">
+                <div class="chars_nav scrollable">
+                    <table>
+                        <tr>
+                            <td class="noborder chars_box"></td>
+                            <td class="noborder chars_box">
+                                <input type="checkbox" class="checkbox_input" checked disabled>
+                            </td>
+                            <td class="noborder chars_box">
+                                <input id="kazuha_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()" checked>
+                            </td>
+                            <td class="noborder chars_box">
+                                <input id="bennett_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()" checked>
+                            </td>
+                            <td class="noborder chars_box">
+                                <input id="furina_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()">
+                            </td>
+                            <td class="noborder chars_box">
+                                <input id="ayaka_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()" checked>
+                            </td>
+                            <td class="noborder chars_box">
+                                <input id="charlotte_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="team"><span class="nowrap">編成</span></td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('HuTao')"><img src="image\HuTao.png" alt="胡桃" class="chars_image"></button>
+                            </td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('Kazuha')"><img src="image\Kazuha.png" alt="万葉" class="chars_image"></button>
+                            </td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('Bennett')"><img src="image\Bennett.png" alt="ベネット" class="chars_image"></button>
+                            </td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('Furina')"><img src="image\Furina.png" alt="フリーナ" class="chars_image"></button>
+                            </td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('Ayaka')"><img src="image\Ayaka.png" alt="綾華" class="chars_image"></button>
+                            </td>
+                            <td class="noborder">
+                                <button class="chars_tab-button" onclick="showScreen2('Charlotte')"><img src="image\Charlotte.png" alt="シャルロット" class="chars_image"></button>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p id="member_number_caution"><b>5人以上編成されています！</b></p>
+                </div>
+
+                <div id="HuTao" class="screen2">
+                    <h3>胡桃</h3>
+                    <p>
+                        レベル<br>
+                        90
+                    </p>
+                    <p>
+                        武器<br>
+                        護摩の杖 精錬ランク<span class="parameter">1</span>
+                        <input id="homa_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="change_hutao_hp(), set_parameter(this)">
+                    </p>
+                    <p>
+                        天賦レベル<br>
+                        <span>
+                            元素スキル：<span class="parameter">10</span>
+                            <input id="hutao_skilltalent" type="range" min="9" max="13" step="1" value="10" class="slider_input" onchange="set_parameter(this)">
+                        </span><br>
+                        <span>
+                            元素爆発&emsp;：<span class="parameter">10</span>
+                            <input id="hutao_bursttalent" type="range" min="9" max="13" step="1" value="10" class="slider_input" onchange="set_parameter(this)">
+                        </span>
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        火魔女4
+                    </p>
+
+                    <p>
+                        バフなしステータス<br>
+                        胡桃のHP上限、元素熟知、会心ダメージを入力してください。<br>
+                        <div id="pop_up1" class="overlay">
+                            <div class="window">
+                                <h4>胡桃のHPについて</h4>
+                                <div id="pop_up1_sentence"></div>
+                                <p>
+                                    <button class="small-button" onclick="confirm_hutao_hp()">はい</button>
+                                    <button class="small-button" onclick="ignore_hutao_hp()">無視</button><br>
+                                    <input id="keep_to_change1" type="checkbox" class="checkbox_input">今後もこの選択を続ける
+                                </p>
+                            </div>
+                        </div>
+                        HP上限&emsp;&emsp;&emsp;：<input id="hutao_hp" type="number" step="1" value="30000" class="status-input no-spin" onchange="never_minus(this)">
+                        <span id="hutao_skill_caution" class="text"><b>胡桃のスキルによる攻撃力上昇値が上限に達しています！</b></span><br>
+                        元素熟知&emsp;&emsp;：<input id="hutao_em" type="number" step="1" value="250" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        会心ダメージ：<input id="hutao_crit_damage" type="number" step="0.1" value="300" class="status-input no-spin" onchange="never_minus(this)">％<br>
+                        ※水共鳴やサポーターからのバフなどが入っていない数値であることを確認してください。
+                    </p>
+                    <p>
+                        聖遺物による攻撃力%、攻撃力実数値を入力してください。<br>
+                        攻撃力％&emsp;&emsp;：<input id="hutao_artifact_percentage_attack" type="number" step="0.1" value="10.5" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        攻撃力実数&emsp;：<input id="hutao_artifact_flat_attack" type="number" step="0.1" value="36" class="status-input no-spin" onchange="never_minus(this)">+311<br>
+                    </p>
+    
+                    <h3>参考値</h3>
+                    <p>
+                        <span class="text">体力半分以下</span><span class="text">・冥蝶の舞下の胡桃の攻撃力：</span>
+                        <span id="hutao_attack" class="text">???</span>
+                    </p>
+                    <p>
+                        ダメージバフ：<br>
+                        <span class="text">火魔女2セット効果</span><span class="text"> + 火魔女4セット効果</span>
+                        <span class="text"> + 杯のメインステータス</span><span class="text"> + 固有天賦</span><br>
+                        = 15% + 7.5% + 46.6% + 33%<br>
+                        = <span id="damage_buff_view">102.1%</span>
+                    </p>
+                    <p>ここではカスタムバフの効果や料理・薬剤の効果を考慮しない値を表示しています。</p>
+                </div>
+
+
+                <div id="Kazuha" class="screen2">
+                    <h3>万葉</h3>
+                    <p id="kazuha_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <P>
+                        命の星座<br>
+                        <input id="kazuha_constellation" type="checkbox" class="checkbox_input" checked>2凸以上
+                    </P>
+                    <p>
+                        武器<br>
+                        <span class="text">蒼古なる自由の誓い</span><span class="text">&emsp;精錬ランク</span><span class="parameter">1</span>
+                        <input id="freedom_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        翠緑4
+                    </p>
+                    <p>
+                        バフなし元素熟知：<input id="kazuha_initial_em" type="number" step="1" value="1000" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        <input id="kazuha_instructor" type="checkbox" class="checkbox_input" checked>教官4の効果を受ける
+                    </p>
+
+                    <h3>参考値</h3>
+                    <p>
+                        最終元素熟知：<span id="kazuha_ultimate_em">???</span><br>
+                        <span class="text">味方への炎元素ダメージバフ：</span><span id="kazuha_dmgbuff" class="text">???</span>
+                    </p>
+                </div>
+
+
+                <div id="Bennett" class="screen2">
+                    <h3>ベネット</h3>
+                    <p id="bennett_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <p>
+                        命の星座<br>
+                        6凸
+                    </p>
+                    <p>
+                        元素爆発天賦レベル<br>
+                        13
+                    </p>
+                    <p>
+                        武器<br>
+                        <input id="bennett_key" type="checkbox" class="checkbox_input exclusive" onchange="choose_one(this)" checked>
+                        聖顕の鍵 精錬ランク<span class="parameter">1</span>
+                        <input id="bennett_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_bennett_hp(), set_parameter(this)"><br>
+                        <input id="bennett_nomalsword" type="checkbox" class="checkbox_input exclusive" onchange="choose_one(this)">味方へのバフがない基礎攻撃力674の武器
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        <input id="bennett_instructor" type="checkbox" class="checkbox_input exclusive instructor" onchange="artifact_check(), exclusive_box(this)">教官4
+                        <span id="bennett_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="bennett_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)" checked>旧貴族4
+                        <span id="bennett_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">味方へのバフがない聖遺物
+                    </p>
+                    <p>
+                        バフなしステータス<br>
+                        ベネットのHP上限を入力してください。<br>
+                        HP上限：<input id="bennett_initial_hp" type="number" step="1" value="50000" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        <div id="pop_up2" class="overlay">
+                            <div class="window">
+                                <h4>ベネットのHPについて</h4>
+                                <div id="pop_up2_sentence"></div>
+                                <p>
+                                    <button class="small-button" onclick="confirm_bennett_hp()">はい</button>
+                                    <button class="small-button" onclick="ignore_bennett_hp()">無視</button><br>
+                                    <input id="keep_to_change2" type="checkbox" class="checkbox_input">今後もこの選択を続ける
+                                </p>
+                            </div>
+                        </div>
+                    </p>
+
+                    <h3>参考値</h3>
+                    <p>
+                        最終HP上限：<span id="bennett_ultimate_hp">???</span><br>
+                        味方への元素熟知バフ：<span id="bennett_embuff">???</span>
+                    </p>
+                </div>
+
+
+                <div id="Furina" class="screen2">
+                    <h3>フリーナ</h3>
+                    <p id="furina_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <p>
+                        命の星座<br>
+                        1凸以上
+                    </p>
+                    <p>
+                        天賦レベル<br>
+                        元素爆発&emsp;：<span class="parameter">10</span>
+                        <input id="furina_talent" type="range" min="9" max="13" step="1" value="10" class="slider_input" onchange="set_parameter(this)">
+                    </p>
+                    <p>
+                        武器<br>
+                        聖顕の鍵 精錬ランク<span class="parameter">1</span>
+                        <input id="furina_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_furina_hp(), set_parameter(this)">
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        <input id="furina_instructor" type="checkbox" class="checkbox_input exclusive instructor" onchange="artifact_check(), exclusive_box(this)">教官4
+                        <span id="furina_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="furina_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)" checked>旧貴族4
+                        <span id="furina_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">味方へのバフがない聖遺物
+                    </p>
+                    <p>
+                        バフなしステータス<br>
+                        水共鳴などが発動していないフリーナのHP上限を入力してください。<br>
+                        HP上限：<input id="furina_initial_hp" type="number" step="1" value="65000" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        <div id="pop_up3" class="overlay">
+                            <div class="window">
+                                <h4>フリーナのHPについて</h4>
+                                <div id="pop_up3_sentence"></div>
+                                <p>
+                                    <button class="small-button" onclick="confirm_furina_hp()">はい</button><button class="small-button" onclick="ignore_furina_hp()">無視</button><br>
+                                    <input id="keep_to_change3" type="checkbox" class="checkbox_input">今後もこの選択を続ける
+                                </p>
+                            </div>
+                        </div>
+                        <input id="furina_2c" type="checkbox" class="checkbox_input">2凸効果の発動後に聖顕の鍵の効果を発動
+                    </p>
+
+                    <h3>参考値</h3>
+                    <p>
+                        最終HP上限：<span id="furina_ultimate_hp">???</span><br>
+                        味方への元素熟知バフ：<span id="furina_embuff">???</span>
+                    </p>
+                </div>
+
+
+                <div id="Ayaka" class="screen2">
+                    <h3>神里綾華</h3>
+                    <p id="ayaka_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <p>
+                        命の星座<br>
+                        4凸以上
+                    </p>
+                    <p>
+                        武器<br>
+                        味方へのバフがない武器
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        <input id="ayaka_instructor" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>教官4
+                        <span id="ayaka_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="ayaka_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)">旧貴族4
+                        <span id="ayaka_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">味方へのバフがない聖遺物
+                    </p>
+                </div>
+
+
+                <div id="Charlotte" class="screen2">
+                    <h3>シャルロット</h3>
+                    <p id="charlotte_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <p>
+                        武器<br>
+                        龍殺しの英傑譚 精錬ランク5
+                    </p>
+                    <p>
+                        聖遺物<br>
+                        <input id="charlotte_instructor" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>教官4
+                        <span id="charlotte_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="charlotte_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)">旧貴族4
+                        <span id="charlotte_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">味方へのバフがない聖遺物
+                    </p>
+                </div>
+            </div>
+
+            
+            <div id="confirming-status" class="screen1">
+                <h3>ステータスの確認とダメージ計算</h3>
+                <p>胡桃のステータスとバフ・デバフの合計</p>
+                <div class="scrollable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th><span class="nowrap">HP</span></th>
+                                <th><span class="nowrap">攻撃力</span></th>
+                                <th><span class="nowrap">元素熟知</span></th>
+                                <th><span class="nowrap">元素反応の</span><br><span class="nowrap">加算効果</span></th>
+                                <th><span class="nowrap">会心ダメージ</span></th>
+                                <th><span class="nowrap">ダメージバフ</span></th>
+                                <th><span class="nowrap">敵の防御力</span></th>
+                                <th><span class="nowrap">敵の元素耐性</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="nowrap">胡桃の</span><br><span class="nowrap">ステータス</span></td>
+                                <td id="hp_h"></td>
+                                <td id="attack_h"></td>
+                                <td id="em_h"></td>
+                                <td id="elemental_reactiondmg_h"></td>
+                                <td id="crit_damage_h"></td>
+                                <td id="damage_buff_h"></td>
+                                <td id="defence_h"></td>
+                                <td id="elemental_res_h"></td>
+                            </tr>
+                            <tr>
+                                <td><span class="nowrap">サポーターの</span><br><span class="nowrap">バフ・デバフ</span></td>
+                                <td id="hp_s"></td>
+                                <td id="attack_s"></td>
+                                <td id="em_s"></td>
+                                <td id="elemental_reactiondmg_s"></td>
+                                <td id="crit_damage_s"></td>
+                                <td id="damage_buff_s"></td>
+                                <td id="defence_s"></td>
+                                <td id="elemental_res_s"></td>
+                            </tr>
+                            <tr>
+                                <td><span class="nowrap">料理・薬剤</span><br><span class="nowrap">などその他</span></td>
+                                <td id="hp_o"></td>
+                                <td id="attack_o"></td>
+                                <td id="em_o"></td>
+                                <td id="elemental_reactiondmg_o"></td>
+                                <td id="crit_damage_o"></td>
+                                <td id="damage_buff_o"></td>
+                                <td id="defence_o"></td>
+                                <td id="elemental_res_o"></td>
+                            </tr>
+                            <tr>
+                                <td><span class="nowrap">胡桃の</span><br><span class="nowrap">最終ステータス</span></td>
+                                <td id="hp_u"></td>
+                                <td id="attack_u"></td>
+                                <td id="em_u"></td>
+                                <td id="elemental_reactiondmg_u"></td>
+                                <td id="crit_damage_u"></td>
+                                <td id="damage_buff_u"></td>
+                                <td id="defence_u"></td>
+                                <td id="elemental_res_u"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>ダメージ計算式</p>
+                <div class="formula scrollable">
+                    <div class="box">ダメージ</div>
+                    <span>=</span>
+                    <div class="box">攻撃力</div>
+                    <span>×</span>
+                    <div class="box">天賦倍率</div>
+                    <span>×</span>
+                    <div class="box">1 + ダメージバフ</div>
+                    <span>×</span>
+                    <div class="box">1 + 会心ダメージ</div>
+                    <span>×</span>
+                    <div class="box">元素反応倍率</div>
+                    <span>×</span>
+                    <div class="box">
+                        1 + 元素反応の加算効果 +
+                        <div class="fraction">
+                            <sup>2<b>.</b>78 × 元素熟知</sup>
+                            <span>───────────</span>
+                            <sub>1400 + 元素熟知</sub>
+                        </div>
+                    </div>
+                    <span>×</span>
+                    <!--ここの計算式は元素耐性によって異なるため、元素耐性を計算するときにjavascript側で表示する-->
+                    <div class="box">
+                        <div id="enemy_defence_formula" class="fraction">
+                            <sup>胡桃のレベル + 100</sup>
+                            <span>─────────────────────────────────</span>
+                            <sub>(1+敵の防御力)(敵レベル+100) + 胡桃のレベル+100</sub>
+                        </div>
+                    </div>
+                    <span>×</span>
+                    <!--ここの計算式も元素耐性によって異なるため、元素耐性を計算するときにjavascript側で表示する-->
+                    <div id="enemy_resistance_formula" class="box"></div>
+                </div>
+
+                <p>
+                    =<span id="attack_fm">???</span>×<span id="skilldamage_fm">???</span>×<span id="damage_buff_fm">???</span>
+                    ×<span id="crit_damage_fm">???</span>×<span id="reaction_multiplier_fm">???</span>×<span id="reaction_dmgbonus_fm">???</span>
+                    ×<span id="enemy_defence_fm">???</span>×<span id="elemental_res_fm">???</span>
+                </p>
+                <p>
+                    =<span id="damage_fm"></span>
+                </p>
+                <p>
+                    <span class="text">※元素耐性と防御力に関わる乗算因子は、その値によって計算式が若干異なります。</span>
+                    <span class="text">ここでは、最終的なステータスに応じた計算式を表示しています。</span>
+                </p>
+
+                <h3>最終ダメージの記憶・比較機能</h3>
+                <!--
+                    <p><span class="text">編成・装備のラベルとその最終ダメージを5つまで保存できます。</span><span class="text">保存したダメージはその比や差を計算することができます。</span></p>
+                -->
+                <p>現在未実装ーやる気が出れば作ります(^^)/ー</p>
+                
+                <h3>聖遺物厳選によるダメージ増加のデモンストレーション</h3>
+                <!--
+                    <p>胡桃の聖遺物を更新してステータスが微上昇したときのダメージ増加を計算します。</p>
+                -->
+                <p>現在未実装ーやる気が出れば作ります(^^)/ー</p>
+            </div>
+
+            
+            <div id="references" class="screen1">
+                <h3>注意一覧</h3>
+                <p>
+                    胡桃のスキルによる攻撃力上昇値が上限に達するなど、気にかけるべき注意をここにまとめて表示します。
+                    <span id="member_number_caution_view"><br><b>・5人以上編成されています！</b></span>
+                    <span id="instructor_caution_view"><br><b>・教官4を複数人が装備しています！</b></span>
+                    <span id="noblesse_caution_view"><br><b>・旧貴族4を複数人が装備しています！</b></span>
+                    <span id="hutao_skill_caution_view"><br><b>・胡桃のスキルによる攻撃力上昇値が上限に達しています！</b></span>
+                </p>
+
+                <h3>入力設定</h3>
+                武器の精錬ランクを変える際の、所定のステータスの入力欄の変更<br>
+                <input id="confirm_change" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this), change_status()">変更する<br>
+                <input id="ignore_change" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this), change_status()">変更しない
+
+                <h3>このWebページの紹介</h3>
+                <p>
+                    このWebページの簡単な使い方などをHoYoLABの記事で紹介しています。
+                </p>
+                <p>
+                    このツールの誤りや不具合を発見された方は、記事で報告してくださると嬉しいです。また、キャラクターや武器などの追加のリクエストも受け付けております。<br>
+                    <a>ここにリンクを貼る</a>
+                </p>
+
+                <h3>外部リンク</h3>
+                <p>参考文献<br>
+                    <a href="https://wikiwiki.jp/genshinwiki/%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8%E8%A8%88%E7%AE%97%E5%BC%8F" target="_blank">原神wiki ダメージ計算式</a><br>
+                    <a href="https://genshin-impact.fandom.com/wiki/Hu_Tao" target="_blank">Genshin Impact Wiki HuTao</a>
+                </p>
+                <p>画像引用元<br>
+                    <a href="https://wiki.hoyolab.com/pc/genshin/home" target="_blank">原神HoYoWiki >> キャラ図鑑</a>
+                </p>
+
+                <p>他のツール・解説（自作・自筆）<br>
+                    <a href="https://www.geogebra.org/m/u3cqkc5j" target="_blank">護摩胡桃用ステータスバランスチェッカーPC用</a><br>
+                    <a href="https://www.geogebra.org/classic/eyngc4aj" target="_blank">護摩胡桃用ステータスバランスチェッカースマホ用</a><br>
+                    <a href="https://www.hoyolab.com/article/17405714" target="_blank">【護摩胡桃用】ステータスバランスチェッカーを公開しました</a>
+                    <span class="text">(上記ツールの紹介記事)</span>
+                </p>
+                <p>
+                    <a href="https://www.hoyolab.com/article/22295704" target="_blank">【上級者向け徹底解説】胡桃のダメージチャレンジについて</a><br>
+                    古い記事ですので参考程度に見てください！
+                </p>
+                
+                <!--
+                <p>他のツール（自作<b>ではない</b>）</p>
+                    <a href="https://gensim.work/" target="_blank">原神シミュ トップページ</a><br>
+                    使いやすい汎用ダメージ計算サイトです<br>
+                -->
+
+                <p>宣伝<br>
+                    制作者は胡桃のダメージチャレンジに夢中です！<br>
+                    <a href="https://www.hoyolab.com/article/31741399" target="_blank">胡桃で328万ダメージ!</a>
+                    <span class="text">(HoYoLABの記事)</span><br>
+                    <a href="https://youtu.be/v3u7kN19-0E?si=9TW0HyRWffxb4-OH" target="_blank">【原神 ダメージチャレンジ】胡桃で328万ダメージ</a>
+                    <span class="text">(YouTubeの動画)</span>
+                </p>
+
+                <h3>更新履歴</h3>
+                <table>
+                    <tr>
+                        <td>?/??</td>
+                        <td class="left_text">
+                            胡桃ダメージチャレンジ専用計算機の紹介記事をHoYoLABで公開<br>
+                            <a>ここにリンクを貼る</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>?/??</td>
+                        <td class="left_text">webページを公開</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </main>
+    
+    <script src="script.js"></script>
+
+    <footer>
+        <p>制作者：さしす&nbsp;
+            <a href="https://www.hoyolab.com/accountCenter/postList?id=103140761" target="_blank">
+            https://www.hoyolab.com/accountCenter</a></p>
+        <p>
+            このツールの誤りを発見された方は、記事で報告してくださると嬉しいです。<br>
+            また、キャラクターや武器などの追加のリクエストも受け付けております！
+        </p>
+    </footer>
+</body>
+</html>
