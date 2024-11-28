@@ -38,7 +38,7 @@ function showScreen2(screenId) {
 }
 
 
-// 編成していないキャラクターの編集画面で注意を促したり、5人以上編成しているときに注意を促す関数
+// 編成していないキャラクターの編集画面で注意を促したり、5人以上編成しているときに注意を促す関数（脳筋実装）
 function team_caution() {
     let member_number = 1;
     if (document.getElementById("kazuha_team").checked) {
@@ -46,6 +46,13 @@ function team_caution() {
         member_number += 1;
     } else {
         document.getElementById("kazuha_team_caution").style.display = "inline";
+    }
+
+    if (document.getElementById("xilonen_team").checked) {
+        document.getElementById("xilonen_team_caution").style.display = "none";
+        member_number += 1;
+    } else {
+        document.getElementById("xilonen_team_caution").style.display = "inline";
     }
 
     if (document.getElementById("bennett_team").checked) {
@@ -90,51 +97,74 @@ team_caution();
 // 敵レベルと敵の元素耐性を入力させる関数
 // ついでに螺旋でのバフ入力のヒントや料理の非表示も行う
 function set_enemy_level() {
-    set_parameter(document.getElementById("level_range"));
-
-    var level_range = document.getElementById("level_range");
+    var level_range1 = document.getElementById("level_range1")
+    var level_range2 = document.getElementById("level_range2");
     var level_input = document.getElementById("level_input");
     var enemy_level = document.getElementById("enemy_level");
 
     var enemy_resistance = document.getElementById("enemy_resistance");
     var resistance_input = document.getElementById("resistance_input");
+    var curse_stacks_span = document.getElementById("curse_stacks_span");
 
     var abyss_tip = document.getElementById("abyss_tip");
     var foods_select = document.getElementById("foods_select");
 
-    if (document.getElementById("shouki_no_kami").checked) {
-        level_range.style.display = "inline";
+    if (document.getElementById("ichcahuipilli").checked) {
+        set_parameter(document.getElementById("level_range1"));
+        level_range1.style.display = "inline";
+        level_range2.style.display = "none";
+        level_input.style.display = "none";
+        enemy_level.style.display = "inline";
+
+        enemy_resistance.style.display = "inline";
+        enemy_resistance.innerText = "10";
+        resistance_input.style.display = "none";
+        curse_stacks_span.style.display = "inline";
+
+        abyss_tip.style.display = "none";
+        foods_select.style.display = "inline";
+
+    } else if (document.getElementById("shouki_no_kami").checked) {
+        set_parameter(document.getElementById("level_range2"));
+        level_range1.style.display = "none";
+        level_range2.style.display = "inline";
         level_input.style.display = "none";
         enemy_level.style.display = "inline";
 
         enemy_resistance.style.display = "inline";
         enemy_resistance.innerText = "-140";
         resistance_input.style.display = "none";
+        curse_stacks_span.style.display = "none";
 
         abyss_tip.style.display = "none";
         foods_select.style.display = "inline";
 
     } else if (document.getElementById("abyss").checked) {
-        level_range.style.display = "none";
+        enemy_level.innerText = "65";
+        level_range1.style.display = "none";
+        level_range2.style.display = "none";
         level_input.style.display = "none";
         enemy_level.style.display = "inline";
-        enemy_level.innerText = "65";
 
         enemy_resistance.style.display = "inline";
         enemy_resistance.innerText = "10";
         resistance_input.style.display = "none";
+        curse_stacks_span.style.display = "none";
 
         abyss_tip.style.display = "inline";
         foods_select.style.display = "none";
 
     } else {
-        level_range.style.display = "none";
+        set_parameter(document.getElementById("level_input"));
+        level_range1.style.display = "none";
+        level_range2.style.display = "none";
         level_input.style.display = "inline";
         enemy_level.style.display = "none";
 
         enemy_resistance.style.display = "none";
         enemy_resistance.innerText = "10"
         resistance_input.style.display = "inline";
+        curse_stacks_span.style.display = "none";
 
         abyss_tip.style.display = "none";
         foods_select.style.display = "inline";
@@ -172,12 +202,71 @@ function choose_one(element) {
 }
 
 // 負の値の入力を禁止する関数
-function never_minus(inputElement){
+function never_minus(inputElement) {
     let inputValue = inputElement.value;
     if (inputValue < 0) {
         inputValue = 0;
     }
     inputElement.value = inputValue;
+}
+
+let developer_autofill_flag = false;
+// 開発者の環境でのステータスなどを自動で入力する関数
+function developer_autofill(inputElement) {
+    let hp = parseFloat(inputElement.value);
+    if (hp == 715) {
+        alert("開発者のステータスを入力します");
+        document.getElementById("kazuha_team").checked = true;
+        document.getElementById("xilonen_team").checked = true;
+        document.getElementById("bennett_team").checked = true;
+        document.getElementById("furina_team").checked = false;
+        document.getElementById("ayaka_team").checked = false;
+        document.getElementById("charlotte_team").checked = false;
+
+        document.getElementById("homa_refinement").value = 5;
+        set_parameter(document.getElementById("homa_refinement"));
+        document.getElementById("hutao_skilltalent").value = 13;
+        set_parameter(document.getElementById("hutao_skilltalent"));
+        document.getElementById("hutao_bursttalent").value = 13;
+        set_parameter(document.getElementById("hutao_bursttalent"));
+        document.getElementById("hutao_hp").value = 32612;
+        document.getElementById("hutao_em").value = 387;
+        document.getElementById("hutao_crit_damage").value = 330.2;
+        document.getElementById("hutao_artifact_percentage_attack").value = 11.7;
+        document.getElementById("hutao_artifact_flat_attack").value = 14;
+
+        document.getElementById("kazuha_initial_em").value = 1067;
+        document.getElementById("bennett_initial_hp").value = 45651;
+        document.getElementById("furina_talent").value = 13;
+        set_parameter(document.getElementById("furina_talent"));
+        document.getElementById("furina_initial_hp").value = 67440;
+
+        team_caution();
+        developer_autofill_flag = true;
+
+    // ついでにHP上限が基礎HPを下回らないようにする
+    } else if (hp < 15552 || !hp) {
+        inputElement.value = 15552;
+    }
+}
+
+// ベネットが教官4を装備したときはHP上限を45651に、旧貴族4を装備したときは51134に、味方へのバフがない聖遺物を装備したときは55770にする
+function bennett_hp_for_developer(){
+    // 即座に実行させると他のプログラムと干渉して不具合を起こす気がするため、0.05秒待ってから実行する
+    setTimeout(function() {
+        let hp;
+        if (developer_autofill_flag) {
+            if (document.getElementById("bennett_instructor").checked) {
+                hp = 45651;
+            } else if (document.getElementById("bennett_noblesse").checked) {
+                hp = 51134;
+            } else {
+                hp = 55770;
+            }
+    
+            document.getElementById("bennett_initial_hp").value = hp;
+        }
+    }, 50);
 }
 
 
@@ -187,6 +276,9 @@ function artifact_check() {
     // 即座に実行させると他のプログラムと干渉して不具合を起こすため、0.05秒待ってから実行する
     setTimeout(function() {
         let count1 = 0;
+        if (document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked) {
+            count1 += 1;
+        }
         if (document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked) {
             count1 += 1;
         }
@@ -200,6 +292,11 @@ function artifact_check() {
             count1 += 1;
         }
 
+        if (count1 > 1 && document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked) {
+            document.getElementById("xilonen_instructor_caution").style.display = "inline";
+        } else {
+            document.getElementById("xilonen_instructor_caution").style.display = "none";
+        }
         if (count1 > 1 && document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked) {
             document.getElementById("bennett_instructor_caution").style.display = "inline";
         } else {
@@ -229,6 +326,9 @@ function artifact_check() {
 
 
         let count2 = 0;
+        if (document.getElementById("xilonen_noblesse").checked && document.getElementById("xilonen_team").checked) {
+            count2 += 1;
+        }
         if (document.getElementById("bennett_noblesse").checked && document.getElementById("bennett_team").checked) {
             count2 += 1;
         }
@@ -242,6 +342,11 @@ function artifact_check() {
             count2 += 1;
         }
 
+        if (count2 > 1 && document.getElementById("xilonen_noblesse").checked && document.getElementById("xilonen_team").checked) {
+            document.getElementById("xilonen_noblesse_caution").style.display = "inline";
+        } else {
+            document.getElementById("xilonen_noblesse_caution").style.display = "none";
+        }
         if (count2 > 1 && document.getElementById("bennett_noblesse").checked && document.getElementById("bennett_team").checked) {
             document.getElementById("bennett_noblesse_caution").style.display = "inline";
         } else {
@@ -574,6 +679,9 @@ function furina_em() {
     if (document.getElementById("furina_2c").checked) {
         furina_hp += 15307.39 * 1.4;
     }
+    if (document.getElementById("xilonen_furina_2c").checked && document.getElementById("xilonen_team").checked) {
+        furina_hp += 15307.39 * 0.45;
+    }
     if (document.getElementById("additional_percentage_hp_allmenber").checked) {
         furina_hp += 15307.39 * 0.01*parseFloat(document.getElementById("hutao_additional_percentage_hp").value);
     }
@@ -595,26 +703,22 @@ function furina_em() {
 // インプットの入力が変化するたびに処理を実行させる
 document.addEventListener("change", function() {
     // 即座に実行すると種々の処理の前に実行され不具合が起こるため、0.05秒待機してから実行
-    setTimeout(calculate_damage, 50);
+    setTimeout(calculate_delta_damage, 50);
 });
 
 // ボタンをクリックするたびに処理を実行させる
 Array.from(document.getElementsByTagName("button")).forEach(button => {
     button.addEventListener("click", function(){
-        setTimeout(calculate_damage, 50);
+        setTimeout(calculate_delta_damage, 50);
     });
 });
 
 
 // ステータスの計算・バフとデバフの合計・ダメージ計算
-function calculate_damage() {
+function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     // 胡桃の自己バフ
     // 百分率で表示されるものはその百分率での値を入力する
-    let hp = 0;
-    let attack = 0;
-    let em = 0;
     let elemental_reactiondmg = 0;
-    let crit_damage = 0;
     let damage_buff = 0;
     let defence = 0;
     let elemental_res = 0;
@@ -622,27 +726,27 @@ function calculate_damage() {
 
     // 胡桃の設定
     // 仕様上、値の上書きは不要
-    attack += hutao_attack();
     hp += parseFloat(document.getElementById("hutao_hp").value);
     document.getElementById("hp_h").innerText = Math.round(hp);
 
-    document.getElementById("attack_h").innerText = Math.round(attack);
+    // 胡桃の攻撃力はHP上限が決まった後にちゃんと計算する
+    document.getElementById("attack_h").innerText = Math.round(hutao_attack());
 
     em += parseFloat(document.getElementById("hutao_em").value);
     document.getElementById("em_h").innerText = Math.round(em);
 
     elemental_reactiondmg += 15;
-    document.getElementById("elemental_reactiondmg_h").innerText = String(elemental_reactiondmg)+"%";
+    document.getElementById("elemental_reactiondmg_h").innerText = String(Math.round(elemental_reactiondmg))+"%";
 
     crit_damage += parseFloat(document.getElementById("hutao_crit_damage").value);
-    document.getElementById("crit_damage_h").innerText = String(Math.round(crit_damage *10)/10)+"%";
+    document.getElementById("crit_damage_h").innerText = String(Math.round(crit_damage * 10)/10)+"%";
 
     damage_buff += 15 + 7.5 + 46.6 + 33;
-    document.getElementById("damage_buff_h").innerText = String(damage_buff)+"%";
+    document.getElementById("damage_buff_h").innerText = String(Math.round(damage_buff * 10)/10)+"%";
 
     // 0にしかなり得ないものは初めから入力しない
-    // document.getElementById("defence_h").innerText = String(defence)+"%";
-    // document.getElementById("elemental_res_h").innerText = String(elemental_res)+"%";
+    // document.getElementById("defence_h").innerText = String(Math.round(defence *10)/10)+"%";
+    // document.getElementById("elemental_res_h").innerText = String(Math.round(elemental_res *10)/10)+"%";
 
 
 
@@ -658,19 +762,28 @@ function calculate_damage() {
     let elemental_res_s = 0;
 
     // 各キャラクターごとのバフ・デバフの計算
+
+    // 聖遺物のバフ
     // 旧貴族4と教官4
-    if ((document.getElementById("bennett_noblesse").checked && document.getElementById("bennett_team").checked) ||
+    if ((document.getElementById("xilonen_noblesse").checked && document.getElementById("xilonen_team").checked) ||
+        (document.getElementById("bennett_noblesse").checked && document.getElementById("bennett_team").checked) ||
         (document.getElementById("furina_noblesse").checked && document.getElementById("furina_team").checked) ||
         (document.getElementById("ayaka_noblesse").checked && document.getElementById("ayaka_team").checked) ||
         (document.getElementById("charlotte_noblesse").checked && document.getElementById("charlotte_team").checked)) {
         percentage_attack_s += 20;
     }
 
-    if ((document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked) ||
+    if ((document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked) ||
+        (document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked) ||
         (document.getElementById("furina_instructor").checked && document.getElementById("furina_team").checked) ||
         (document.getElementById("ayaka_instructor").checked && document.getElementById("ayaka_team").checked) ||
         (document.getElementById("charlotte_instructor").checked && document.getElementById("charlotte_team").checked)) {
         em_s += 120;
+    }
+
+    // 灰塵4
+    if (document.getElementById("cinder_city").checked) {
+        damage_buff_s += 40;
     }
     
 
@@ -689,6 +802,15 @@ function calculate_damage() {
         damage_buff_s += dmgbuff_kazuha;
     }
 
+    // シロネンのバフ・デバフ
+    if (document.getElementById("xilonen_team").checked) {
+        percentage_attack_s += 45;
+
+        damage_buff_s += 19.2 + 6.4*parseFloat(document.getElementById("peak_refinement").value);
+
+        elemental_res_s += -6 - 3*parseFloat(document.getElementById("xilonen_talent").value);
+    }
+
     // ベネットのバフ
     let em_bennett = bennett_em();
     if (document.getElementById("bennett_team").checked) {
@@ -697,6 +819,9 @@ function calculate_damage() {
         } else {
             flat_attack_s += (1.19+0.2) * (191.16+674);
         }
+
+        // ここで炎元素共鳴の効果を計上しておく
+        percentage_attack_s += 25;
 
         damage_buff_s += 15;
 
@@ -792,6 +917,10 @@ function calculate_damage() {
     // 敵設定
     if (document.getElementById("abyss").checked) {
         crit_damage_o += 120;
+    }
+
+    if (document.getElementById("ichcahuipilli").checked) {
+        damage_buff_o += 60 * parseFloat(document.getElementById("curse_stacks_input").value)
     }
 
     elemental_res_o += parseFloat(document.getElementById("enemy_resistance").innerText);
@@ -894,7 +1023,9 @@ function calculate_damage() {
         document.getElementById("hutao_skill_caution_view").style.display = "none";
     }
 
-    attack = hutao_basic_attack() + hutao_attack_byHP(hp)[1];
+
+    // 胡桃のHPが確定したあとに攻撃力を再度計算しないといけない
+    attack += hutao_basic_attack() + hutao_attack_byHP(hp)[1];
     attack += flat_attack_s + 715*0.01*percentage_attack_s + flat_attack_o + 715*0.01*percentage_attack_o;
 
     em += em_s + em_o;
@@ -931,7 +1062,7 @@ function calculate_damage() {
     document.getElementById("skilldamage_fm").innerText = Math.round(skilldamage * 100)/100;
 
     document.getElementById("damage_buff_fm").innerText = Math.round((1 + 0.01*damage_buff) * 100)/100;
-    document.getElementById("crit_damage_fm").innerText = 1 + 0.01*crit_damage;
+    document.getElementById("crit_damage_fm").innerText = Math.round((1 + 0.01*crit_damage) * 100)/100;
 
     let reaction_multiplier;
     if (document.getElementById("melt").checked) {
@@ -941,7 +1072,7 @@ function calculate_damage() {
     } else {
         reaction_multiplier = 1;
     }
-    document.getElementById("reaction_multiplier_fm").innerText = reaction_multiplier;
+    document.getElementById("reaction_multiplier_fm").innerText = Math.round(reaction_multiplier * 10)/10;
 
     let reaction_dmgbonus = 1+ 0.01*elemental_reactiondmg + 2.78*em/(1400+em);
     document.getElementById("reaction_dmgbonus_fm").innerText = Math.round(reaction_dmgbonus * 1000)/1000;
@@ -1002,5 +1133,33 @@ function calculate_damage() {
 
     document.getElementById("damage_fm").innerText = Math.round(damage).toLocaleString();
     document.getElementById("damage").innerText = Math.round(damage).toLocaleString();
+    return damage;
 }
 calculate_damage();
+
+
+// 聖遺物更新によるダメージ増加のデモンストレーション
+function calculate_delta_damage() {
+    let hp_percentage_damage = calculate_damage(hp = 15552.31*0.0525);
+    let hp_flat_damage = calculate_damage(hp = 269);
+    let attack_percentage_damage = calculate_damage(hp = 0, attack = 715*0.0525);
+    let attack_flat_damage = calculate_damage(hp = 0, attack = 18);
+    let em_damage = calculate_damage(hp = 0, attack = 0, em = 21);
+    let crit_damage_damage = calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 6.99);
+    let damage = calculate_damage();
+
+    document.getElementById("dmg_increase_hp_percentage").innerText = Math.round(hp_percentage_damage - damage);
+    document.getElementById("dmg_increase_hp_flat").innerText = Math.round(hp_flat_damage - damage);
+    document.getElementById("dmg_increase_attack_percentage").innerText = Math.round(attack_percentage_damage - damage);
+    document.getElementById("dmg_increase_attack_flat").innerText = Math.round(attack_flat_damage - damage);
+    document.getElementById("dmg_increase_em").innerText = Math.round(em_damage - damage);
+    document.getElementById("dmg_increase_crit_damage").innerText = Math.round(crit_damage_damage - damage);
+
+    document.getElementById("dmg_ratio_hp_percentage").innerText = String(Math.round((hp_percentage_damage / damage - 1) * 10000)/100) + "%";
+    document.getElementById("dmg_ratio_hp_flat").innerText = String(Math.round((hp_flat_damage / damage - 1) * 10000)/100) + "%";
+    document.getElementById("dmg_ratio_attack_percentage").innerText = String(Math.round((attack_percentage_damage / damage - 1) * 10000)/100) + "%";
+    document.getElementById("dmg_ratio_attack_flat").innerText = String(Math.round((attack_flat_damage / damage - 1) * 10000)/100) + "%";
+    document.getElementById("dmg_ratio_em").innerText = String(Math.round((em_damage / damage - 1) * 10000)/100) + "%";
+    document.getElementById("dmg_ratio_crit_damage").innerText = String(Math.round((crit_damage_damage / damage - 1) * 10000)/100) + "%";
+}
+calculate_delta_damage();
