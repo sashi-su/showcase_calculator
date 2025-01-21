@@ -34,6 +34,10 @@ main {
     }
 }
 
+h3 {
+    margin-top: 50px;
+}
+
 footer {
     text-align: center;
     margin-top: 20px;
@@ -66,6 +70,10 @@ footer {
     font-size: 50px;
 }
 
+#damage_limit {
+    font-size: 22px;
+}
+
 
 
 /*インプットの設定*/
@@ -73,7 +81,7 @@ input {
     margin-top: 5px;
     margin-bottom: 5px;
     box-sizing: border-box;
-    font-size: 18px
+    font-size: 18px;
 }
 
 .checkbox_input {
@@ -97,6 +105,12 @@ input {
 .status-input {
     height: 35px;
     width: 85px;
+}
+
+.text_input {
+    width: 200px;
+    font-size: 16px;
+    padding: 5px;
 }
 
 
@@ -276,6 +290,36 @@ td {
 
 .additional_input {
     text-align: left;
+}
+
+
+/*最終ダメージの記憶・比較機能のテーブル*/
+#comparison_table_criterion {
+    width: 32px;
+}
+
+#comparison_table_number {
+    width: 32px;
+}
+
+#comparison_table_label {
+    width: 200px;
+}
+
+#comparison_table_damage {
+    width: 70px;
+}
+
+#comparison_table_damage_increase {
+    width: 70px;
+}
+
+#comparison_table_damage_ratio {
+    width: 70px;
+}
+
+#comparison_table_delete {
+    width: 40px;
 }
 
 
