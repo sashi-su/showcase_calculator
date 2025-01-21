@@ -11,14 +11,17 @@
 
 <body>
     <header>
-        <h1><span class="text">【原神】</span><span class="text">胡桃ダメージチャレンジ</span><span class="text">専用計算機</span></h1>
+        <h1>
+            <span class="text">【原神】</span><span class="text">胡桃ダメージチャレンジ</span><span class="text">専用計算機</span>
+        </h1>
     </header>
     
     <main id="main">
         <div class="center">
             <div id="damage-showcase">
                 <span id="damage" class="text">???</span>
-                <span class="text">ダメージ</span>
+                <span class="text">ダメージ</span><br>
+                <span id="damage_limit"><span class="text"><b>ダメージが原神のシステム上の</b></span><span class="text"><b>上限に達しました！</b></span></span>
             </div>
         </div>
 
@@ -137,6 +140,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="noborder additional_status">実数ダメージ加算</td>
+                            <td class="noborder additional_input">
+                                ：<input id="hutao_additional_additive_damagebuff" type="number" step="0.1" value="0" class="status-input no-spin">
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="noborder additional_status">敵の防御力</td>
                             <td class="noborder additional_input">
                                 ：<input id="hutao_additional_defence" type="number" step="1" value="0" class="status-input no-spin">%
@@ -174,10 +183,10 @@
                                 <input id="furina_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()">
                             </td>
                             <td class="noborder chars_box">
-                                <input id="ayaka_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()" checked>
+                                <input id="ayaka_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()">
                             </td>
                             <td class="noborder chars_box">
-                                <input id="charlotte_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()">
+                                <input id="citlali_team" type="checkbox" class="checkbox_input" onchange="team_caution(), artifact_check()" checked>
                             </td>
                         </tr>
                         <tr>
@@ -201,7 +210,7 @@
                                 <button class="chars_tab-button" onclick="showScreen2('Ayaka')"><img src="Ayaka.png" alt="綾華" class="chars_image"></button>
                             </td>
                             <td class="noborder">
-                                <button class="chars_tab-button" onclick="showScreen2('Charlotte')"><img src="Charlotte.png" alt="シャルロット" class="chars_image"></button>
+                                <button class="chars_tab-button" onclick="showScreen2('Citlali')"><img src="Citlali.png" alt="シトラリ" class="chars_image"></button>
                             </td>
                         </tr>
                     </table>
@@ -217,8 +226,11 @@
                     </p>
                     <p>
                         武器<br>
-                        護摩の杖 精錬ランク<span class="parameter">1</span>
-                        <input id="homa_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="change_hutao_hp(), set_parameter(this)">
+                        護摩の杖&nbsp;
+                        <span class="text">
+                            精錬ランク<span class="parameter">1</span>
+                            <input id="homa_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="change_hutao_hp(), set_parameter(this)">
+                        </span>
                     </p>
                     <p>
                         天賦レベル<br>
@@ -287,8 +299,11 @@
                     </P>
                     <p>
                         武器<br>
-                        <span class="text">蒼古なる自由の誓い</span><span class="text">&emsp;精錬ランク</span><span class="parameter">1</span>
-                        <input id="freedom_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                        <span class="text">蒼古なる自由の誓い&nbsp;</span>
+                        <span class="text">
+                            精錬ランク<span class="parameter">1</span>
+                            <input id="freedom_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                        </span>
                     </p>
                     <p>
                         聖遺物<br>
@@ -296,7 +311,8 @@
                     </p>
                     <p>
                         バフなし元素熟知：<input id="kazuha_initial_em" type="number" step="1" value="1000" class="status-input no-spin" onchange="never_minus(this)"><br>
-                        <input id="kazuha_instructor" type="checkbox" class="checkbox_input" checked>教官4効果の発動後に固有天賦を発動
+                        <input id="kazuha_instructor" type="checkbox" class="checkbox_input" checked>教官4効果の発動後に固有天賦を発動<br>
+                        <input id="citlali_2c_kazuha" type="checkbox" class="checkbox_input">シトラリ2凸効果の発動後に固有天賦を発動
                     </p>
 
                     <h3>参考値</h3>
@@ -316,17 +332,21 @@
                     </p>
                     <p>
                         天賦レベル<br>
-                        元素スキル&emsp;：<span class="parameter">10</span>
+                        元素スキル：<span class="parameter">10</span>
                         <input id="xilonen_talent" type="range" min="9" max="13" step="1" value="10" class="slider_input" onchange="set_parameter(this)">
                     </p>
                     <p>
                         武器<br>
-                        <span class="text">岩峰を巡る歌</span><span class="text">&emsp;精錬ランク</span><span class="parameter">1</span>
-                        <input id="peak_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                        <span class="text">岩峰を巡る歌&nbsp;</span>
+                        <span class="text">
+                            精錬ランク<span class="parameter">1</span>
+                            <input id="peak_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                        </span>
                     </p>
                     <p>
                         聖遺物<br>
-                        <input id="cinder_city" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>灰塵4<br>
+                        <input id="xilonen_cinder_city" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>灰塵4
+                        <span id="xilonen_cinder_city_caution"><b>灰塵4はすでに他のサポーターが装備しています！</b></span><br>
                         <input id="xilonen_instructor" type="checkbox" class="checkbox_input exclusive instructor" onchange="artifact_check(), exclusive_box(this)">教官4
                         <span id="xilonen_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
                         <input id="xilonen_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)">旧貴族4
@@ -353,9 +373,14 @@
                     <p>
                         武器<br>
                         <input id="bennett_key" type="checkbox" class="checkbox_input exclusive" onchange="choose_one(this)" checked>
-                        聖顕の鍵 精錬ランク<span class="parameter">1</span>
-                        <input id="bennett_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_bennett_hp(), set_parameter(this)"><br>
-                        <input id="bennett_nomalsword" type="checkbox" class="checkbox_input exclusive" onchange="choose_one(this)">味方へのバフがない基礎攻撃力674の武器
+                        聖顕の鍵&nbsp;
+                        <span class="text">
+                            精錬ランク<span class="parameter">1</span>
+                            <input id="bennett_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_bennett_hp(), set_parameter(this)">
+                        </span>
+                        <br>
+                        <input id="bennett_nomalsword" type="checkbox" class="checkbox_input exclusive" onchange="choose_one(this)">
+                        味方へのバフがない基礎攻撃力674の武器
                     </p>
                     <p>
                         聖遺物<br>
@@ -399,13 +424,16 @@
                     </p>
                     <p>
                         天賦レベル<br>
-                        元素爆発&emsp;：<span class="parameter">10</span>
+                        元素爆発：<span class="parameter">10</span>
                         <input id="furina_talent" type="range" min="9" max="13" step="1" value="10" class="slider_input" onchange="set_parameter(this)">
                     </p>
                     <p>
                         武器<br>
-                        聖顕の鍵 精錬ランク<span class="parameter">1</span>
-                        <input id="furina_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_furina_hp(), set_parameter(this)">
+                        聖顕の鍵&nbsp;
+                        <span class="text">
+                            精錬ランク<span class="parameter">1</span>
+                            <input id="furina_key_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="key_refinement(this), change_furina_hp(), set_parameter(this)">
+                        </span>
                     </p>
                     <p>
                         聖遺物<br>
@@ -419,6 +447,7 @@
                         バフなしステータス<br>
                         水共鳴などが発動していないフリーナのHP上限を入力してください。<br>
                         HP上限：<input id="furina_initial_hp" type="number" step="1" value="65000" class="status-input no-spin" onchange="never_minus(this)"><br>
+
                         <div id="pop_up3" class="overlay">
                             <div class="window">
                                 <h4>フリーナのHPについて</h4>
@@ -429,6 +458,7 @@
                                 </p>
                             </div>
                         </div>
+
                         <input id="furina_2c" type="checkbox" class="checkbox_input">フリーナ2凸効果の発動後に聖顕の鍵効果を発動<br>
                         <input id="xilonen_furina_2c" type="checkbox" class="checkbox_input">シロネン2凸効果の発動後に聖顕の鍵効果を発動
                     </p>
@@ -463,20 +493,52 @@
                 </div>
 
 
-                <div id="Charlotte" class="screen2">
-                    <h3>シャルロット</h3>
-                    <p id="charlotte_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                <div id="Citlali" class="screen2">
+                    <h3>シトラリ</h3>
+                    <p id="citlali_team_caution"><b>このキャラクターは編成されていません！</b></p>
+                    <p>
+                        命の星座<span class="parameter">1</span>
+                        <input id="citlali_constellation" type="range" min="0" max="6" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                    </p>
                     <p>
                         武器<br>
-                        龍殺しの英傑譚 精錬ランク5
+                            <input id="citlali_starcaller" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this)">
+                            <span>
+                                祭星者の眺め&nbsp;
+                                <span class="text">
+                                    精錬ランク<span class="parameter">1</span>
+                                    <input id="citlali_starcaller_refinement" type="range" min="1" max="5" step="1" value="1" class="slider_input" onchange="set_parameter(this)">
+                                </span>
+                                <br>
+                            </span>
+                            <input id="citlali_sacrificial" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this)">&nbsp;祭礼の断片<br>
+                            <input id="citlali_dragon" type="checkbox" class="checkbox_input exclusive" onchange="exclusive_box(this)" checked>&nbsp;龍殺しの英傑譚 精錬ランク5<br>
                     </p>
                     <p>
                         聖遺物<br>
-                        <input id="charlotte_instructor" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>教官4
-                        <span id="charlotte_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
-                        <input id="charlotte_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)">旧貴族4
-                        <span id="charlotte_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="citlali_cinder_city" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)" checked>灰塵4
+                        <span id="citlali_cinder_city_caution"><b>灰塵4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="citlali_instructor" type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">教官4
+                        <span id="citlali_instructor_caution"><b>教官4はすでに他のサポーターが装備しています！</b></span><br>
+                        <input id="citlali_noblesse" type="checkbox" class="checkbox_input exclusive noblesse" onchange="artifact_check(), exclusive_box(this)">旧貴族4
+                        <span id="citlali_noblesse_caution"><b>旧貴族4はすでに他のサポーターが装備しています！</b></span><br>
                         <input type="checkbox" class="checkbox_input exclusive" onchange="artifact_check(), exclusive_box(this)">味方へのバフがない聖遺物
+                    </p>
+                    <p>
+                        聖遺物による元素熟知バフ：<input id="citlali_initial_em" type="number" step="1" value="700" class="status-input no-spin" onchange="never_minus(this)"><br>
+                        突破ステータスによるバフや武器効果などを除いた、聖遺物だけによる元素熟知バフを入力してください。<br>
+                        教官4を装備している場合、2セット効果を含め、4セット効果を含めずに元素熟知を入力してください。<br>
+
+                        <div></div>
+                        <input id="instructor_citlali_2c" type="checkbox" class="checkbox_input" checked>教官4効果の発動後にシトラリ1凸効果を発動<br>
+                        <input id="kazuha_citlali_2c" type="checkbox" class="checkbox_input" checked>万葉2凸効果の発動後にシトラリ1凸効果を発動<br>
+                        <input id="key_citlali_2c" type="checkbox" class="checkbox_input" checked>聖顕の鍵効果発動後にシトラリ1凸を発動
+                    </p>
+
+                    <h3>参考値</h3>
+                    <p>
+                        最終元素熟知：<span id="citlali_ultimate_em">???</span><br>
+                        胡桃への実数ダメージ加算：<span id="citlali_additive_damagebuff">???</span>
                     </p>
                 </div>
             </div>
@@ -496,8 +558,9 @@
                                 <th><span class="nowrap">元素反応の</span><br><span class="nowrap">加算効果</span></th>
                                 <th><span class="nowrap">会心ダメージ</span></th>
                                 <th><span class="nowrap">ダメージバフ</span></th>
+                                <th><span class="nowrap">実数ダメージ</span><span class="nowrap">加算</span></th>
                                 <th><span class="nowrap">敵の防御力</span></th>
-                                <th><span class="nowrap">敵の元素耐性</span></th>
+                                <th><span class="nowrap">敵の</span><span class="nowrap">元素耐性</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -509,6 +572,7 @@
                                 <td id="elemental_reactiondmg_h"></td>
                                 <td id="crit_damage_h"></td>
                                 <td id="damage_buff_h"></td>
+                                <td id="additive_damagebuff_h"></td>
                                 <td id="defence_h"></td>
                                 <td id="elemental_res_h"></td>
                             </tr>
@@ -520,6 +584,7 @@
                                 <td id="elemental_reactiondmg_s"></td>
                                 <td id="crit_damage_s"></td>
                                 <td id="damage_buff_s"></td>
+                                <td id="additive_damagebuff_s"></td>
                                 <td id="defence_s"></td>
                                 <td id="elemental_res_s"></td>
                             </tr>
@@ -531,6 +596,7 @@
                                 <td id="elemental_reactiondmg_o"></td>
                                 <td id="crit_damage_o"></td>
                                 <td id="damage_buff_o"></td>
+                                <td id="additive_damagebuff_o"></td>
                                 <td id="defence_o"></td>
                                 <td id="elemental_res_o"></td>
                             </tr>
@@ -542,6 +608,7 @@
                                 <td id="elemental_reactiondmg_u"></td>
                                 <td id="crit_damage_u"></td>
                                 <td id="damage_buff_u"></td>
+                                <td id="additive_damagebuff_u"></td>
                                 <td id="defence_u"></td>
                                 <td id="elemental_res_u"></td>
                             </tr>
@@ -553,9 +620,7 @@
                 <div class="formula scrollable">
                     <div class="box">ダメージ</div>
                     <span>=</span>
-                    <div class="box">攻撃力</div>
-                    <span>×</span>
-                    <div class="box">天賦倍率</div>
+                    <div class="box">攻撃力&nbsp;×&nbsp;天賦倍率&nbsp;+&nbsp;実数ダメージ加算</div>
                     <span>×</span>
                     <div class="box">1 + ダメージバフ</div>
                     <span>×</span>
@@ -586,7 +651,7 @@
                 </div>
 
                 <p>
-                    =<span id="attack_fm">???</span>×<span id="skilldamage_fm">???</span>×<span id="damage_buff_fm">???</span>
+                    =(<span id="attack_fm">???</span>×<span id="skilldamage_fm">???</span>+<span id="additive_damagebuff_fm">???</span>)×<span id="damage_buff_fm">???</span>
                     ×<span id="crit_damage_fm">???</span>×<span id="reaction_multiplier_fm">???</span>×<span id="reaction_dmgbonus_fm">???</span>
                     ×<span id="enemy_defence_fm">???</span>×<span id="elemental_res_fm">???</span>
                 </p>
@@ -599,10 +664,27 @@
                 </p>
 
                 <h3>最終ダメージの記憶・比較機能</h3>
-                <!--
-                    <p><span class="text">編成・装備のラベルとその最終ダメージを5つまで保存できます。</span><span class="text">保存したダメージはその比や差を計算することができます。</span></p>
-                -->
-                <p>現在未実装ーやる気が出れば作ります(^^)/ー</p>
+                <p>
+                    <span class="text">編成・装備のラベルとその最終ダメージを保存できます。</span>
+                    <span class="text">保存したダメージはその比や差を計算することができます。</span>
+                </p>
+                <button id="addRowButton" class="small-button">現在のダメージを記憶</button>
+                <div class="scrollable">
+                    <table id="comparison_table">
+                        <thead>
+                            <tr>
+                                <th id="comparison_table_criterion"><span class="nowrap">基準</span></th>
+                                <th id="comparison_table_label"><span class="nowrap">ラベル</span></th>
+                                <th id="comparison_table_damage"><span class="nowrap">ダメージ</span></th>
+                                <th id="comparison_table_damage_increase"><span class="nowrap">ダメージ</span><span class="nowrap">増加量</span></th>
+                                <th id="comparison_table_damage_ratio"><span class="nowrap">ダメージ</span><span class="nowrap">増加比</span></th>
+                                <th id="comparison_table_delete"><span class="nowrap">&nbsp;&nbsp;削除&nbsp;&nbsp;</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
                 
                 <h3>聖遺物更新によるダメージ増加の計算</h3>
                 <p>胡桃の聖遺物を更新してステータスが微上昇したときのダメージ増加を計算します。</p>
@@ -651,7 +733,12 @@
                     <span id="member_number_caution_view"><br><b>・5人以上編成されています！</b></span>
                     <span id="instructor_caution_view"><br><b>・教官4を複数人が装備しています！</b></span>
                     <span id="noblesse_caution_view"><br><b>・旧貴族4を複数人が装備しています！</b></span>
+                    <span id="cinder_city_caution_view"><br><b>・灰塵4を複数人が装備しています！</b></span>
                     <span id="hutao_skill_caution_view"><br><b>・胡桃のスキルによる攻撃力上昇値が上限に達しています！</b></span>
+                    <span id="damage_limit_view"><br>
+                        <b>・ダメージが原神のシステム上の上限に達しました！</b><br>
+                        現在の計算上のダメージは<span id="real_damage">???</span>です
+                    </span>
                 </p>
 
                 <h3>入力設定</h3>
@@ -704,6 +791,17 @@
 
                 <h3>更新履歴</h3>
                 <table>
+                    <tr>
+                        <td>2025/?/??</td>
+                        <td class="left_text">
+                            キャラクターにシトラリを追加<br>
+                            キャラクターからシャルロットを削除<br>
+                            最終ダメージの記憶・比較機能を追加<br>
+                            計算上のダメージが9,999,999を超えた場合、9,999,999と表示してダメージが上限に達したことを記載するよう調整<br>
+                            シロネンが灰塵4を装備している場合、シロネンを編成から外しても灰塵4の効果が発動したままになる不具合を修正<br>
+                            シロネンとフリーナの教官4の効果が、万葉の固有天賦による元素熟知のバフに反映されない不具合を修正
+                        </td>
+                    </tr>
                     <tr>
                         <td>11/28</td>
                         <td class="left_text">
