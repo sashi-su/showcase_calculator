@@ -76,11 +76,11 @@ function team_caution() {
         document.getElementById("ayaka_team_caution").style.display = "inline";
     }
 
-    if (document.getElementById("charlotte_team").checked) {
-        document.getElementById("charlotte_team_caution").style.display = "none";
+    if (document.getElementById("citlali_team").checked) {
+        document.getElementById("citlali_team_caution").style.display = "none";
         member_number += 1;
     } else {
-        document.getElementById("charlotte_team_caution").style.display = "inline";
+        document.getElementById("citlali_team_caution").style.display = "inline";
     }
 
     if (member_number <= 4) {
@@ -188,7 +188,7 @@ function exclusive_box(element) {
 }
 
 // 常に一つのみのチェックボックスを有効化させる関数
-// ラジオボタンで良いことはこれを作ってから気が付いた
+// ラジオボタンとは少し勝手が違う
 function choose_one(element) {
     if (element.checked) {
         element.parentNode.querySelectorAll(".exclusive").forEach(box =>{
@@ -211,6 +211,7 @@ function never_minus(inputElement) {
 }
 
 let developer_autofill_flag = false;
+
 // 開発者の環境でのステータスなどを自動で入力する関数
 function developer_autofill(inputElement) {
     let hp = parseFloat(inputElement.value);
@@ -221,7 +222,7 @@ function developer_autofill(inputElement) {
         document.getElementById("bennett_team").checked = true;
         document.getElementById("furina_team").checked = false;
         document.getElementById("ayaka_team").checked = false;
-        document.getElementById("charlotte_team").checked = false;
+        document.getElementById("citlali_team").checked = false;
 
         document.getElementById("homa_refinement").value = 5;
         set_parameter(document.getElementById("homa_refinement"));
@@ -250,6 +251,7 @@ function developer_autofill(inputElement) {
     }
 }
 
+// これも開発者のためだけのコード
 // ベネットが教官4を装備したときはHP上限を45651に、旧貴族4を装備したときは51134に、味方へのバフがない聖遺物を装備したときは55770にする
 function bennett_hp_for_developer(){
     // 即座に実行させると他のプログラムと干渉して不具合を起こす気がするため、0.05秒待ってから実行する
@@ -270,11 +272,12 @@ function bennett_hp_for_developer(){
 }
 
 
-// 教官4や旧貴族4を同時に装備させたときに注意する関数
+// 教官4や旧貴族4、灰塵4を同時に装備させたときに注意する関数
 // ひどい書き方のコードであることは承知しているが、とりあえず動くので技巧的な処理はせず愚直にif文を羅列することにする
 function artifact_check() {
     // 即座に実行させると他のプログラムと干渉して不具合を起こすため、0.05秒待ってから実行する
     setTimeout(function() {
+        // 教官4
         let count1 = 0;
         if (document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked) {
             count1 += 1;
@@ -288,7 +291,7 @@ function artifact_check() {
         if (document.getElementById("ayaka_instructor").checked && document.getElementById("ayaka_team").checked) {
             count1 += 1;
         }
-        if (document.getElementById("charlotte_instructor").checked && document.getElementById("charlotte_team").checked) {
+        if (document.getElementById("citlali_instructor").checked && document.getElementById("citlali_team").checked) {
             count1 += 1;
         }
 
@@ -312,10 +315,10 @@ function artifact_check() {
         } else {
             document.getElementById("ayaka_instructor_caution").style.display = "none";
         }
-        if (count1 > 1 && document.getElementById("charlotte_instructor").checked && document.getElementById("charlotte_team").checked) {
-            document.getElementById("charlotte_instructor_caution").style.display = "inline";
+        if (count1 > 1 && document.getElementById("citlali_instructor").checked && document.getElementById("citlali_team").checked) {
+            document.getElementById("citlali_instructor_caution").style.display = "inline";
         } else {
-            document.getElementById("charlotte_instructor_caution").style.display = "none";
+            document.getElementById("citlali_instructor_caution").style.display = "none";
         }
 
         if (count1 > 1) {
@@ -325,6 +328,7 @@ function artifact_check() {
         }
 
 
+        // 旧貴族4
         let count2 = 0;
         if (document.getElementById("xilonen_noblesse").checked && document.getElementById("xilonen_team").checked) {
             count2 += 1;
@@ -338,7 +342,7 @@ function artifact_check() {
         if (document.getElementById("ayaka_noblesse").checked && document.getElementById("ayaka_team").checked) {
             count2 += 1;
         }
-        if (document.getElementById("charlotte_noblesse").checked && document.getElementById("charlotte_team").checked) {
+        if (document.getElementById("citlali_noblesse").checked && document.getElementById("citlali_team").checked) {
             count2 += 1;
         }
 
@@ -362,16 +366,43 @@ function artifact_check() {
         } else {
             document.getElementById("ayaka_noblesse_caution").style.display = "none";
         }
-        if (count2 > 1 && document.getElementById("charlotte_noblesse").checked && document.getElementById("charlotte_team").checked) {
-            document.getElementById("charlotte_noblesse_caution").style.display = "inline";
+        if (count2 > 1 && document.getElementById("citlali_noblesse").checked && document.getElementById("citlali_team").checked) {
+            document.getElementById("citlali_noblesse_caution").style.display = "inline";
         } else {
-            document.getElementById("charlotte_noblesse_caution").style.display = "none";
+            document.getElementById("citlali_noblesse_caution").style.display = "none";
         }
 
         if (count2 > 1) {
             document.getElementById("noblesse_caution_view").style.display = "inline";
         } else {
             document.getElementById("noblesse_caution_view").style.display = "none";
+        }
+
+
+        // 灰塵4
+        let count3 = 0;
+        if (document.getElementById("xilonen_cinder_city").checked && document.getElementById("xilonen_team").checked) {
+            count3 += 1;
+        }
+        if (document.getElementById("citlali_cinder_city").checked && document.getElementById("citlali_team").checked) {
+            count3 += 1;
+        }
+
+        if (count3 > 1 && document.getElementById("xilonen_cinder_city").checked && document.getElementById("xilonen_team").checked) {
+            document.getElementById("xilonen_cinder_city_caution").style.display = "inline";
+        } else {
+            document.getElementById("xilonen_cinder_city_caution").style.display = "none";
+        }
+        if (count3 > 1 && document.getElementById("citlali_cinder_city").checked && document.getElementById("xilonen_team").checked) {
+            document.getElementById("citlali_cinder_city_caution").style.display = "inline";
+        } else {
+            document.getElementById("citlali_cinder_city_caution").style.display = "none";
+        }
+
+        if (count3 > 1) {
+            document.getElementById("cinder_city_caution_view").style.display = "inline";
+        } else {
+            document.getElementById("cinder_city_caution_view").style.display = "none";
         }
     }, 50);
 }
@@ -571,6 +602,90 @@ function ignore_furina_hp() {
 }
 
 
+// 最終ダメージの記憶・比較機能の制御 (GPT-4o作)
+const table = document.getElementById('comparison_table').querySelector('tbody');
+const addRowButton = document.getElementById('addRowButton');
+
+// ダメージ増加量とダメージ増加比の計算
+const updateRowNumbers = () => {
+    const selectedRow = table.querySelector('input[name="damage_comparision"]:checked');
+    if (selectedRow) {
+        const row = selectedRow.closest('tr');
+        var criterion = parseFloat(row.childNodes[2].innerText.replace(/,/g, ""));
+        if (criterion) {
+            // console.log(`選択された行の数値: ${criterion}`);
+        }
+    }
+
+    const rows = table.querySelectorAll('tr');
+    rows.forEach((row) => {
+        let damage = parseFloat(row.cells[2].innerText.replace(/,/g, ""));
+        row.cells[3].textContent = (damage - criterion).toLocaleString();
+        row.cells[4].textContent = String(Math.round(100 * (damage / criterion - 1) * 10)/10) + "%";
+    });
+};
+
+// 現在のダメージの記憶
+addRowButton.addEventListener('click', () => {
+    const newRow = document.createElement('tr');
+
+    const criterionCell = document.createElement('td');
+    const radioElement = document.createElement('input');
+    radioElement.type = 'radio';
+    radioElement.name = 'damage_comparision';
+    if (table.querySelectorAll('tr').length == 0) {
+        radioElement.checked = 'true';
+    }
+    radioElement.addEventListener('change', () => {
+        updateRowNumbers();
+    });
+    criterionCell.appendChild(radioElement);
+    newRow.appendChild(criterionCell);
+
+    const inputCell = document.createElement('td');
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.className = 'text_input';
+    inputCell.appendChild(inputElement);
+    newRow.appendChild(inputCell);
+
+    const damageCell = document.createElement('td');
+    damageCell.innerText = Math.round(calculate_damage()).toLocaleString();
+    newRow.appendChild(damageCell);
+
+    newRow.appendChild(document.createElement('td'));
+    newRow.appendChild(document.createElement('td'));
+
+    const buttonCell = document.createElement('td');
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = '削除';
+    deleteButton.className = 'deleteRowButton';
+    deleteButton.addEventListener('click', () => {
+        // ここのコードは私が書いたので汚い
+        // 基準となる行を削除したときに先頭の行を新たに基準にするプログラム
+        flag = false;
+        if (newRow.children[0].children[0].checked && table.childNodes.length != 2) {
+            flag = true;
+        }
+        newRow.remove();
+        updateRowNumbers();
+        if (flag) {
+            table.querySelector('input').checked = true;
+        }
+    });
+    buttonCell.appendChild(deleteButton);
+    newRow.appendChild(buttonCell);
+
+    table.appendChild(newRow);
+});
+
+const observer = new MutationObserver(() => {
+    updateRowNumbers();
+});
+observer.observe(table, { childList: true });
+
+
+
 
 // 参考値の入力とバフの計算
 
@@ -623,21 +738,27 @@ function kazuha_dmgbuff() {
         kazuha_em += 200;
     }
     if (document.getElementById("kazuha_instructor").checked) {
-        if (document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked ||
+        if (document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked ||
+            document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked ||
+            document.getElementById("furina_instructor").checked && document.getElementById("furina_team").checked ||
             document.getElementById("ayaka_instructor").checked && document.getElementById("ayaka_team").checked ||
-            document.getElementById("charlotte_instructor").checked && document.getElementById("charlotte_team").checked) {
-        kazuha_em += 120;
+            document.getElementById("citlali_instructor").checked && document.getElementById("citlali_team").checked) {
+            kazuha_em += 120;
+        }
+    }
+    if (document.getElementById("citlali_2c_kazuha").checked) {
+        if (parseFloat(document.getElementById("citlali_constellation").value) >= 2 && document.getElementById("citlali_team").checked) {
+            kazuha_em += 250;
         }
     }
     if (document.getElementById("additional_em_allmenber").checked) {
         kazuha_em += parseFloat(document.getElementById("hutao_additional_em").value);
     }
 
-    kazuha_em = Math.round(kazuha_em * 10)/10;
-    document.getElementById("kazuha_ultimate_em").innerText = kazuha_em;
+    document.getElementById("kazuha_ultimate_em").innerText = Math.round(kazuha_em * 10)/10;
 
-    let kazuha_dmgbuff = Math.round(kazuha_em * 0.04 * 1000)/1000;
-    document.getElementById("kazuha_dmgbuff").innerText = String(kazuha_dmgbuff) + "%";
+    let kazuha_dmgbuff = kazuha_em * 0.04;
+    document.getElementById("kazuha_dmgbuff").innerText = String(Math.round(kazuha_dmgbuff * 1000)/1000) + "%";
 
     return kazuha_dmgbuff;
 }
@@ -697,6 +818,61 @@ function furina_em() {
 }
 
 
+// シトラリの最終元素熟知と1凸効果による実数ダメージバフの計算
+function citlali_additive_damagebuff() {
+    if (parseFloat(document.getElementById("citlali_constellation").value) >= 1) {
+        let em = parseFloat(document.getElementById("citlali_initial_em").value);
+
+        if (parseFloat(document.getElementById("citlali_constellation").value) >= 2) {
+            em += 125;
+        }
+
+        if (document.getElementById("citlali_starcaller").checked) {
+            em += 265;
+            em += 75 + 25*parseFloat(document.getElementById("citlali_starcaller_refinement").value);
+        }
+        if (document.getElementById("citlali_sacrificial").checked) {
+            em += 221;
+        }
+
+        if (document.getElementById("kazuha_citlali_2c").checked && document.getElementById("kazuha_constellation").checked && document.getElementById("kazuha_team").checked) {
+            em += 200;
+        }
+        if (document.getElementById("instructor_citlali_2c").checked) {
+            if (document.getElementById("xilonen_instructor").checked && document.getElementById("xilonen_team").checked ||
+                document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked ||
+                document.getElementById("furina_instructor").checked && document.getElementById("furina_team").checked ||
+                document.getElementById("ayaka_instructor").checked && document.getElementById("ayaka_team").checked ||
+                document.getElementById("citlali_instructor").checked && document.getElementById("citlali_team").checked) {
+            em += 120;
+            }
+        }
+        if (document.getElementById("key_citlali_2c").checked) {
+            if (document.getElementById("bennett_team").checked) {
+                em += bennett_em();
+            }
+            if (document.getElementById("furina_team").checked) {
+                em += furina_em();
+            }
+        }
+
+        if (document.getElementById("additional_em_allmenber").checked) {
+            em += parseFloat(document.getElementById("hutao_additional_em").value);
+        }
+
+        document.getElementById("citlali_ultimate_em").innerText = Math.round(em * 10)/10;
+
+        let additive_damagebuff = 2 * em;
+        document.getElementById("citlali_additive_damagebuff").innerText = Math.round(additive_damagebuff * 10)/10;
+
+        return additive_damagebuff;
+
+    } else {
+        return 0;
+    }
+}
+
+
 
 // ステータスの確認
 
@@ -720,6 +896,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     // 百分率で表示されるものはその百分率での値を入力する
     let elemental_reactiondmg = 0;
     let damage_buff = 0;
+    let additive_damagebuff = 0;
     let defence = 0;
     let elemental_res = 0;
 
@@ -745,6 +922,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     document.getElementById("damage_buff_h").innerText = String(Math.round(damage_buff * 10)/10)+"%";
 
     // 0にしかなり得ないものは初めから入力しない
+    // document.getElementById("additive_damagebuff_h").innerText = Math.round(additive_damagebuff *10)/10;
     // document.getElementById("defence_h").innerText = String(Math.round(defence *10)/10)+"%";
     // document.getElementById("elemental_res_h").innerText = String(Math.round(elemental_res *10)/10)+"%";
 
@@ -758,6 +936,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     let elemental_reactiondmg_s = 0;
     let crit_damage_s = 0;
     let damage_buff_s = 0;
+    let additive_damagebuff_s = 0;
     let defence_s = 0;
     let elemental_res_s = 0;
 
@@ -769,7 +948,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
         (document.getElementById("bennett_noblesse").checked && document.getElementById("bennett_team").checked) ||
         (document.getElementById("furina_noblesse").checked && document.getElementById("furina_team").checked) ||
         (document.getElementById("ayaka_noblesse").checked && document.getElementById("ayaka_team").checked) ||
-        (document.getElementById("charlotte_noblesse").checked && document.getElementById("charlotte_team").checked)) {
+        (document.getElementById("citlali_noblesse").checked && document.getElementById("citlali_team").checked)) {
         percentage_attack_s += 20;
     }
 
@@ -777,12 +956,13 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
         (document.getElementById("bennett_instructor").checked && document.getElementById("bennett_team").checked) ||
         (document.getElementById("furina_instructor").checked && document.getElementById("furina_team").checked) ||
         (document.getElementById("ayaka_instructor").checked && document.getElementById("ayaka_team").checked) ||
-        (document.getElementById("charlotte_instructor").checked && document.getElementById("charlotte_team").checked)) {
+        (document.getElementById("citlali_instructor").checked && document.getElementById("citlali_team").checked)) {
         em_s += 120;
     }
 
     // 灰塵4
-    if (document.getElementById("cinder_city").checked) {
+    if ((document.getElementById("xilonen_cinder_city").checked && document.getElementById("xilonen_team").checked) ||
+        (document.getElementById("citlali_cinder_city").checked && document.getElementById("citlali_team").checked)) {
         damage_buff_s += 40;
     }
     
@@ -842,9 +1022,26 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
         defence_s += -30;
     }
 
-    // シャルロットのバフ
-    if (document.getElementById("charlotte_team").checked) {
-        percentage_attack_s += 48;
+    // シトラリのバフ・デバフ
+    let additive_damagebuff_citlali = citlali_additive_damagebuff();
+    if (document.getElementById("citlali_team").checked) {
+        additive_damagebuff_s = additive_damagebuff_citlali;
+        if (parseFloat(document.getElementById("citlali_constellation").value) >= 2) {
+            em_s += 250;
+            elemental_res_s += -20;
+        }
+        if (parseFloat(document.getElementById("citlali_constellation").value) == 6) {
+            damage_buff_s += 60;
+        }
+
+        if (document.getElementById("citlali_starcaller").checked) {
+            damage_buff_s += 21 + 7*parseFloat(document.getElementById("citlali_starcaller_refinement").value);
+        }
+        if (document.getElementById("citlali_dragon").checked) {
+            percentage_attack_s += 48;
+        }
+
+        damage_buff_s += -20;
     }
 
 
@@ -889,6 +1086,12 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
         document.getElementById("damage_buff_s").innerText = "";
     }
 
+    if (additive_damagebuff_s) {
+        document.getElementById("additive_damagebuff_s").innerText = Math.round(additive_damagebuff_s * 10)/10;
+    } else {
+        document.getElementById("additive_damagebuff_s").innerText = "";
+    }
+
     if (defence_s) {
         document.getElementById("defence_s").innerText = String(Math.round(defence_s * 10)/10)+"%";
     } else {
@@ -911,6 +1114,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     let elemental_reactiondmg_o = 0;
     let crit_damage_o = 0;
     let damage_buff_o = 0;
+    let additive_damagebuff_o = 0;
     let defence_o = 0;
     let elemental_res_o = 0;
 
@@ -952,6 +1156,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     elemental_reactiondmg_o += parseFloat(document.getElementById("hutao_additional_reaction_dmgbonus").value);
     crit_damage_o += parseFloat(document.getElementById("hutao_additional_crit_damage").value);
     damage_buff_o += parseFloat(document.getElementById("hutao_additional_damage_buff").value);
+    additive_damagebuff_o += parseFloat(document.getElementById("hutao_additional_additive_damagebuff").value);
     defence_o += parseFloat(document.getElementById("hutao_additional_defence").value);
     elemental_res_o += parseFloat(document.getElementById("hutao_additional_resistance").value);
 
@@ -997,6 +1202,12 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
         document.getElementById("damage_buff_o").innerText = "";
     }
 
+    if (additive_damagebuff_o) {
+        document.getElementById("additive_damagebuff_o").innerText = Math.round(additive_damagebuff_o * 10)/10;
+    } else {
+        document.getElementById("additive_damagebuff_o").innerText = "";
+    }
+
     if (defence_o) {
         document.getElementById("defence_o").innerText = String(Math.round(defence_o * 10)/10)+"%";
     } else {
@@ -1032,6 +1243,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     elemental_reactiondmg += elemental_reactiondmg_s + elemental_reactiondmg_o;
     crit_damage += crit_damage_s + crit_damage_o;
     damage_buff += damage_buff_s + damage_buff_o;
+    additive_damagebuff += additive_damagebuff_s + additive_damagebuff_o;
     defence += defence_s + defence_o;
     elemental_res += elemental_res_s + elemental_res_o;
 
@@ -1043,6 +1255,11 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     document.getElementById("crit_damage_u").innerText = String(Math.round(crit_damage * 10)/10)+"%";
     document.getElementById("damage_buff_u").innerText = String(Math.round(damage_buff * 10)/10)+"%";
 
+    if (additive_damagebuff) {
+        document.getElementById("additive_damagebuff_u").innerText = Math.round(additive_damagebuff * 10)/10;
+    } else {
+        document.getElementById("additive_damagebuff_u").innerText = "";
+    }
     if (defence) {
         document.getElementById("defence_u").innerText = String(Math.round(defence * 10)/10)+"%";
     } else {
@@ -1060,7 +1277,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     let skilldamage = {9: 5.8793, 10: 6.1744, 11: 6.4695, 12: 6.7646, 13: 7.0597}
     [parseFloat(document.getElementById("hutao_bursttalent").value)];
     document.getElementById("skilldamage_fm").innerText = Math.round(skilldamage * 100)/100;
-
+    document.getElementById("additive_damagebuff_fm").innerText = Math.round(additive_damagebuff * 10)/10;
     document.getElementById("damage_buff_fm").innerText = Math.round((1 + 0.01*damage_buff) * 100)/100;
     document.getElementById("crit_damage_fm").innerText = Math.round((1 + 0.01*crit_damage) * 100)/100;
 
@@ -1128,14 +1345,26 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     
 
     // ダメージ計算
-    let damage = attack * skilldamage * (1+0.01*damage_buff) * (1+0.01*crit_damage) * reaction_multiplier *
+    let damage = (attack * skilldamage + additive_damagebuff) * (1+0.01*damage_buff) * (1+0.01*crit_damage) * reaction_multiplier *
     reaction_dmgbonus * enemy_defence * elemental_res;
+
+    // ダメージを四捨五入した値が9,999,999を超えている場合、ダメージを9,999,999と表示して注意を行う
+    if (Math.round(damage) > 9999999) {
+        document.getElementById("damage_limit").style.display = "inline";
+        document.getElementById("damage_limit_view").style.display = "inline";
+        document.getElementById("real_damage").innerText = Math.round(damage).toLocaleString();
+
+        damage = 9999999;
+    } else {
+        document.getElementById("damage_limit").style.display = "none";
+        document.getElementById("damage_limit_view").style.display = "none";
+    }
 
     document.getElementById("damage_fm").innerText = Math.round(damage).toLocaleString();
     document.getElementById("damage").innerText = Math.round(damage).toLocaleString();
+    
     return damage;
 }
-calculate_damage();
 
 
 // 聖遺物更新によるダメージ増加のデモンストレーション
@@ -1146,14 +1375,16 @@ function calculate_delta_damage() {
     let attack_flat_damage = calculate_damage(hp = 0, attack = 18);
     let em_damage = calculate_damage(hp = 0, attack = 0, em = 21);
     let crit_damage_damage = calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 6.99);
+
+    // 最後に通常のダメージを計算することにより種々のバグを避けている
     let damage = calculate_damage();
 
-    document.getElementById("dmg_increase_hp_percentage").innerText = Math.round(hp_percentage_damage - damage);
-    document.getElementById("dmg_increase_hp_flat").innerText = Math.round(hp_flat_damage - damage);
-    document.getElementById("dmg_increase_attack_percentage").innerText = Math.round(attack_percentage_damage - damage);
-    document.getElementById("dmg_increase_attack_flat").innerText = Math.round(attack_flat_damage - damage);
-    document.getElementById("dmg_increase_em").innerText = Math.round(em_damage - damage);
-    document.getElementById("dmg_increase_crit_damage").innerText = Math.round(crit_damage_damage - damage);
+    document.getElementById("dmg_increase_hp_percentage").innerText = Math.round(hp_percentage_damage - damage).toLocaleString();
+    document.getElementById("dmg_increase_hp_flat").innerText = Math.round(hp_flat_damage - damage).toLocaleString();
+    document.getElementById("dmg_increase_attack_percentage").innerText = Math.round(attack_percentage_damage - damage).toLocaleString();
+    document.getElementById("dmg_increase_attack_flat").innerText = Math.round(attack_flat_damage - damage).toLocaleString();
+    document.getElementById("dmg_increase_em").innerText = Math.round(em_damage - damage).toLocaleString();
+    document.getElementById("dmg_increase_crit_damage").innerText = Math.round(crit_damage_damage - damage).toLocaleString();
 
     document.getElementById("dmg_ratio_hp_percentage").innerText = String(Math.round((hp_percentage_damage / damage - 1) * 10000)/100) + "%";
     document.getElementById("dmg_ratio_hp_flat").innerText = String(Math.round((hp_flat_damage / damage - 1) * 10000)/100) + "%";
