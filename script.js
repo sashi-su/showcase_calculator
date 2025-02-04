@@ -241,6 +241,7 @@ function developer_autofill(inputElement) {
         document.getElementById("furina_talent").value = 13;
         set_parameter(document.getElementById("furina_talent"));
         document.getElementById("furina_initial_hp").value = 67440;
+        document.getElementById("citlali_initial_em").value = 740;
 
         team_caution();
         developer_autofill_flag = true;
