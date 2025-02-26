@@ -1,6 +1,7 @@
 // プログラム全体を通して、キャラクターの基礎HP、基礎攻撃力、天賦倍率は
 // https://genshin-impact.fandom.com/wiki の各キャラクターのページに記載された数値を引用した
 // 胡桃の基礎攻撃力と護摩の杖の基礎攻撃力の和の厳密な値は不明のため、ゲーム内で確認できる数値715でそのまま計算する
+// プログラム全体を通して、画面には適切に丸めた数値を表示するが、プログラム上では丸めずfloat型の数値を計算するように意識した
 
 
 // 画面を下にスクロールしてもダメージを上に表示したままにする
@@ -1042,7 +1043,7 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
             percentage_attack_s += 48;
         }
 
-        damage_buff_s += -20;
+        elemental_res_s += -20;
     }
 
 
@@ -1349,13 +1350,13 @@ function calculate_damage(hp = 0, attack = 0, em = 0, crit_damage = 0) {
     let damage = (attack * skilldamage + additive_damagebuff) * (1+0.01*damage_buff) * (1+0.01*crit_damage) * reaction_multiplier *
     reaction_dmgbonus * enemy_defence * elemental_res;
 
-    // ダメージを四捨五入した値が9,999,999を超えている場合、ダメージを9,999,999と表示して注意を行う
-    if (Math.round(damage) > 9999999) {
+    // ダメージを四捨五入した値が20,000,000を超えている場合、ダメージを20,000,000と表示して注意を行う
+    if (Math.round(damage) > 20000000) {
         document.getElementById("damage_limit").style.display = "inline";
         document.getElementById("damage_limit_view").style.display = "inline";
         document.getElementById("real_damage").innerText = Math.round(damage).toLocaleString();
 
-        damage = 9999999;
+        damage = 20000000;
     } else {
         document.getElementById("damage_limit").style.display = "none";
         document.getElementById("damage_limit_view").style.display = "none";
